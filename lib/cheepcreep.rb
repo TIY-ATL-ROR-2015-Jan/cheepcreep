@@ -12,15 +12,14 @@ class Github
 
   def initialize
     # ENV["FOO"] is like echo $FOO
-    #@auth = {:username => ENV['GITHUB_USER'], :password => ENV['GITHUB_PASS']}
+    @auth = {:username => ENV['GITHUB_USER'], :password => ENV['GITHUB_PASS']}
+  end
+
+  def get_gists(screen_name)
+    options = {:basic_auth => @auth}
+    result = self.class.get("/users/#{screen_name}/gists", options)
+    json = JSON.parse(result.body)
   end
 end
 
-
-class CheepcreepApp
-end
-
 binding.pry
-
-creeper = CheepcreepApp.new
-creeper.creep
