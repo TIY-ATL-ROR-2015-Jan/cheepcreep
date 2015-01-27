@@ -25,8 +25,18 @@ class Github
     JSON.parse(result.body)
   end
 
+  def create_repo(opts={})
+    options = {:body => opts.to_json}
+    result = self.class.post("/user/repos", options)
+    JSON.parse(result.body)
+  end
+
   def follow_user(screen_name)
     self.class.put("/user/following/#{screen_name}")
+  end
+
+  def unfollow_user(screen_name)
+    self.class.delete("/user/following/#{screen_name}")
   end
 
   def get_team_members(id)
