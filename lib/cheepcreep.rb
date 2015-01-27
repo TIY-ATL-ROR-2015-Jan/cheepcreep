@@ -20,7 +20,20 @@ class Github
     JSON.parse(result.body)
   end
 
-  # Available params: Name, Email, Location, Blog, Company, Hireable
+  def list_user_teams
+    result = self.class.get("/user/teams")
+    JSON.parse(result.body)
+  end
+
+  def follow_user(screen_name)
+    self.class.put("/user/following/#{screen_name}")
+  end
+
+  def get_team_members(id)
+    result = self.class.get("/teams/#{id}/members")
+    JSON.parse(result.body)
+  end
+
   def update_user(opts={})
     options = {:body => opts.to_json}
     result = self.class.patch('/user', options)
