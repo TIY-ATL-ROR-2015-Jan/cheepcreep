@@ -20,6 +20,12 @@ class Github
     JSON.parse(result.body)
   end
 
+  # Available params: Name, Email, Location, Blog, Company, Hireable
+  def update_user(opts={})
+    options = {:body => opts.to_json}
+    result = self.class.patch('/user', options)
+  end
+
   def get_user_endpoint(endpoint, screen_name, page=1, per_page=20)
     options = {:query => {:page => page, :per_page => per_page}}
     result = self.class.get("/users/#{screen_name}#{endpoint}", options)
@@ -60,12 +66,19 @@ def add_github_user(screen_name)
                                 :public_repos  => json['public_repos'])
 end
 
-github = Github.new
-add_github_user('redline6561')
+def monday_hw(github)
+  add_github_user('redline6561')
 
-followers = github.get_followers('redline6561', 1, 100)
-followers.map { |x| x['login'] }.sample(20).each do |username|
-  add_github_user(username)
+  followers = github.get_followers('redline6561', 1, 100)
+  followers.map { |x| x['login'] }.sample(20).each do |username|
+    add_github_user(username)
+  end
+
+  Cheepcreep::GithubUser.order(:followers => :desc).each do |u|
+    puts "User: #{u.login}, Name: #{u.name}, Followers: #{u.followers}"
+  end
 end
+
+github = Github.new
 
 binding.pry
